@@ -3,6 +3,8 @@ import dotenv from "dotenv";
 import bodyParser from "body-parser";
 import cors from "cors";
 
+import { connectDb } from "./config/db.js";
+
 dotenv.config();
 
 const app = express();
@@ -16,6 +18,8 @@ app.get("/", (req, res) => {
   res.status(201).json({ message: "Get request running successfully!" });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+connectDb().then(() => {
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
 });
