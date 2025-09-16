@@ -22,8 +22,8 @@ const userSchema = new mongoose.Schema(
     ],
     role: {
       type: String,
-      enum: ["Student, Faculty"],
-      default: "Student",
+      enum: ["student", "faculty"],
+      default: "student",
     },
     contributions: {
       type: Number,
@@ -33,4 +33,5 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.model("User", userSchema);
+const User = mongoose.model("User", userSchema);
+export default User;
