@@ -1,35 +1,75 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import { useContext } from "react";
+import AuthContext from "./context/AuthContext.js";
 
-function App() {
-  const [count, setCount] = useState(0)
+import Navbar from "./components/Navbar.jsx";
+import Home from "./pages/Home.jsx";
+import Login from "./pages/Login.jsx";
+import Signup from "./pages/Signup.jsx";
+import Dashboard from "./pages/Dashboard.jsx";
+import Resources from "./pages/Resources.jsx";
+import ResourceDetail from "./pages/ResourceDetail.jsx";
+import CreateResource from "./pages/CreateResource.jsx";
+import Projects from "./pages/Projects.jsx";
+import ProjectDetail from "./pages/ProjectDetail.jsx";
+import CreateProject from "./pages/CreateProject.jsx";
+
+export default function App() {
+  const { user } = useContext(AuthContext);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <Router>
+      <Navbar />
+      <div className="container mx-auto p-4">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route
+            path="/login"
+            element={!user ? <Login /> : <Navigate to="/dashboard" />}
+          />
+          <Route
+            path="/signup"
+            element={!user ? <Signup /> : <Navigate to="/dashboard" />}
+          />
+          <Route
+            path="/dashboard"
+            element={user ? <Dashboard /> : <Navigate to="/login" />}
+          />
 
-export default App
+          {/* Resources Routes */}
+          <Route
+            path="/resources"
+            element={user ? <Resources /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/resources/:id"
+            element={user ? <ResourceDetail /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/create-resource"
+            element={user ? <CreateResource /> : <Navigate to="/login" />}
+          />
+
+          {/* Projects Routes */}
+          <Route
+            path="/projects"
+            element={user ? <Projects /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/projects/:id"
+            element={user ? <ProjectDetail /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/create-project"
+            element={user ? <CreateProject /> : <Navigate to="/login" />}
+          />
+        </Routes>
+      </div>
+    </Router>
+  );
+}
